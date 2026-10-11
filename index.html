@@ -1,215 +1,54 @@
 <!DOCTYPE html>
-<html lang="th" class="light">
+<html lang="th" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnonMsg - Admin Dashboard</title>
+    <title>Vortex Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Prompt', sans-serif; background-color: #f1f5f9; }
-        .dark body { background-color: #0f172a; }
-        
-        .view-section { display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .view-section.active { display: block; opacity: 1; animation: fadeIn 0.3s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Loader */
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #ef4444; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #global-loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .dark #global-loader { background: rgba(15,23,42,0.9); }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    </style>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: { adminPrimary: '#ef4444', adminDark: '#1e293b' }
-                }
-            }
-        }
+        tailwind.config = { darkMode: 'class' }
     </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
+    </style>
 </head>
-<body class="text-gray-800 dark:text-gray-200 transition-colors duration-300 flex h-screen overflow-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+    <header class="border-b border-slate-800 glass p-4 flex items-center justify-between">
+        <h1 class="text-lg font-extrabold text-rose-500">🛡️ Vortex Admin Dashboard</h1>
+        <div id="admin-user-info" class="text-sm font-semibold text-slate-400">กำลังตรวจสอบสิทธิ์...</div>
+    </header>
 
-    <div id="global-loader">
-        <div class="loader mb-4" style="width: 40px; height: 40px; border-width: 4px;"></div>
-        <p class="text-sm font-medium animate-pulse text-red-600">Authenticating Admin...</p>
-    </div>
-
-    <!-- Login View (No Sidebar) -->
-    <div id="view-login" class="view-section w-full h-full flex items-center justify-center bg-gray-900 absolute z-50">
-        <div class="bg-white dark:bg-adminDark p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 dark:border-gray-700">
-            <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </div>
+    <main class="flex-grow max-w-6xl w-full mx-auto p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 rounded-3xl glass border border-slate-800 shadow-xl">
+                <h3 class="text-sm font-semibold text-slate-400 mb-1">รายงานความไม่เหมาะสม</h3>
+                <p class="text-3xl font-extrabold text-rose-500" id="stat-reports">0</p>
             </div>
-            <h2 class="text-2xl font-bold text-center mb-2">Admin Portal</h2>
-            <p class="text-center text-gray-500 text-sm mb-6">เข้าสู่ระบบสำหรับผู้ดูแลระบบเท่านั้น</p>
-            
-            <form onsubmit="event.preventDefault(); handleAdminLogin();">
-                <div class="space-y-4">
-                    <input type="email" id="admin-email" required placeholder="Admin Email" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-800 border focus:ring-2 focus:ring-red-500 outline-none">
-                    <input type="password" id="admin-password" required placeholder="Password" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-800 border focus:ring-2 focus:ring-red-500 outline-none">
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition shadow-lg">Login to Dashboard</button>
-                </div>
-            </form>
+            <div class="p-6 rounded-3xl glass border border-slate-800 shadow-xl">
+                <h3 class="text-sm font-semibold text-slate-400 mb-1">สมาชิกทั้งหมด</h3>
+                <p class="text-3xl font-extrabold text-violet-500" id="stat-users">0</p>
+            </div>
+            <div class="p-6 rounded-3xl glass border border-slate-800 shadow-xl">
+                <h3 class="text-sm font-semibold text-slate-400 mb-1">ข้อความทั้งหมด</h3>
+                <p class="text-3xl font-extrabold text-emerald-500" id="stat-messages">0</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white dark:bg-adminDark shadow-lg hidden flex-col h-full z-40 relative">
-        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-            <h1 class="text-xl font-bold text-red-600 flex items-center">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                Admin Panel
-            </h1>
-        </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <button onclick="navigate('overview')" class="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> ภาพรวมระบบ
-            </button>
-            <button onclick="navigate('users')" class="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> จัดการสมาชิก
-            </button>
-            <button onclick="navigate('reports')" class="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> ตรวจสอบรายงาน
-            </button>
-            <button onclick="navigate('audit')" class="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300 hover:text-red-600 transition">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg> Audit Logs
-            </button>
-        </nav>
-        <div class="p-4 border-t border-gray-100 dark:border-gray-700">
-            <button onclick="toggleDarkMode()" class="w-full flex items-center justify-center px-4 py-2 mb-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition">
-                สลับโหมดสี
-            </button>
-            <button onclick="handleAdminLogout()" class="w-full flex items-center justify-center px-4 py-2 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 transition font-bold">
-                ออกจากระบบ
-            </button>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main id="main-content" class="flex-1 flex flex-col h-full overflow-hidden hidden bg-gray-50 dark:bg-gray-900 relative">
-        <header class="bg-white dark:bg-adminDark shadow-sm h-16 flex items-center px-6 lg:px-8 shrink-0">
-            <h2 id="page-title" class="text-xl font-bold text-gray-800 dark:text-white">ภาพรวมระบบ</h2>
-        </header>
-
-        <div class="flex-1 overflow-y-auto p-6 lg:p-8">
-            
-            <!-- View: Overview -->
-            <section id="view-overview" class="view-section">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white dark:bg-adminDark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center">
-                        <div class="p-4 bg-blue-100 text-blue-600 rounded-xl mr-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
-                        <div><p class="text-sm text-gray-500">ผู้ใช้งานทั้งหมด</p><h3 id="stat-users" class="text-3xl font-bold">0</h3></div>
-                    </div>
-                    <div class="bg-white dark:bg-adminDark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center">
-                        <div class="p-4 bg-green-100 text-green-600 rounded-xl mr-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></div>
-                        <div><p class="text-sm text-gray-500">ข้อความในระบบ</p><h3 id="stat-msgs" class="text-3xl font-bold">0</h3></div>
-                    </div>
-                    <div class="bg-white dark:bg-adminDark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center">
-                        <div class="p-4 bg-red-100 text-red-600 rounded-xl mr-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
-                        <div><p class="text-sm text-gray-500">รายงานรอดำเนินการ</p><h3 id="stat-reports" class="text-3xl font-bold text-red-500">0</h3></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- View: Users -->
-            <section id="view-users" class="view-section">
-                <div class="bg-white dark:bg-adminDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                        <h3 class="font-bold">จัดการบัญชีผู้ใช้</h3>
-                        <button onclick="loadUsers()" class="text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition">รีเฟรช</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 dark:bg-gray-800 text-gray-500 text-sm">
-                                    <th class="p-4 font-medium">Username</th>
-                                    <th class="p-4 font-medium">Display Name</th>
-                                    <th class="p-4 font-medium">Status</th>
-                                    <th class="p-4 font-medium">Joined</th>
-                                    <th class="p-4 font-medium text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-users" class="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
-                                <!-- Data inject here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- View: Reports -->
-            <section id="view-reports" class="view-section">
-                <div class="bg-white dark:bg-adminDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                        <h3 class="font-bold">ตรวจสอบรายงาน (Reports)</h3>
-                        <button onclick="loadReports()" class="text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition">รีเฟรช</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 dark:bg-gray-800 text-gray-500 text-sm">
-                                    <th class="p-4 font-medium">Message ID</th>
-                                    <th class="p-4 font-medium">Reason</th>
-                                    <th class="p-4 font-medium">Status</th>
-                                    <th class="p-4 font-medium">Date</th>
-                                    <th class="p-4 font-medium text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-reports" class="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
-                                <!-- Data inject here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- View: Audit Logs -->
-            <section id="view-audit" class="view-section">
-                <div class="bg-white dark:bg-adminDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 dark:border-gray-700">
-                        <h3 class="font-bold">บันทึกการทำงานระบบ (Audit Logs)</h3>
-                        <p class="text-xs text-gray-500 mt-1">แสดงประวัติการกระทำของผู้ดูแลระบบทั้งหมด</p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 dark:bg-gray-800 text-gray-500 text-sm">
-                                    <th class="p-4 font-medium">Admin UID</th>
-                                    <th class="p-4 font-medium">Action</th>
-                                    <th class="p-4 font-medium">Target</th>
-                                    <th class="p-4 font-medium">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-audit" class="divide-y divide-gray-100 dark:divide-gray-700 text-sm font-mono text-xs">
-                                <!-- Data inject here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
+        <div class="p-6 rounded-3xl glass border border-slate-800 shadow-xl">
+            <h2 class="text-xl font-bold mb-4">จัดการรายการรายงาน (Reports)</h2>
+            <div id="reports-list" class="space-y-3">
+                <p class="text-sm text-slate-500">กำลังโหลดข้อมูลรายงาน...</p>
+            </div>
         </div>
     </main>
 
-    <!-- Firebase SDK Modular -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy, limit, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-functions.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Firebase Config (Must match Master Prompt exactly)
         const firebaseConfig = {
             apiKey: "AIzaSyAuafJFSxf5MH2wG8UO5er14peRwT1jl8g",
             authDomain: "anonmsg-7fc77.firebaseapp.com",
@@ -223,234 +62,69 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const functions = getFunctions(app);
 
-        // API Callables (Security via Backend)
-        const callUpdateUserStatus = httpsCallable(functions, 'adminUpdateUserStatus');
-        const callModerateContent = httpsCallable(functions, 'adminModerateContent');
-        const callDeleteAccount = httpsCallable(functions, 'adminDeleteAccount');
-
-        let adminUser = null;
-
-        // UI Utils
-        window.toggleDarkMode = () => document.documentElement.classList.toggle('dark');
-        window.showLoader = (show = true) => { document.getElementById('global-loader').style.display = show ? 'flex' : 'none'; };
-
-        // Routing
-        window.navigate = (viewId) => {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
-            
-            let titles = { 'overview': 'ภาพรวมระบบ', 'users': 'จัดการสมาชิก', 'reports': 'ตรวจสอบรายงาน', 'audit': 'Audit Logs' };
-            if(document.getElementById('page-title')) document.getElementById('page-title').innerText = titles[viewId] || 'Admin';
-
-            if(viewId === 'overview') loadOverview();
-            if(viewId === 'users') loadUsers();
-            if(viewId === 'reports') loadReports();
-            if(viewId === 'audit') loadAuditLogs();
-        };
-
-        // Auth Logic
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // In production, we strictly check custom claims via getIdTokenResult.
-                // For safety on frontend, we assume logged in Admin here, but backend enforces rules.
-                adminUser = user;
-                document.getElementById('view-login').style.display = 'none';
-                document.getElementById('sidebar').style.display = 'flex';
-                document.getElementById('main-content').style.display = 'flex';
-                navigate('overview');
-            } else {
-                adminUser = null;
-                document.getElementById('view-login').style.display = 'flex';
-                document.getElementById('sidebar').style.display = 'none';
-                document.getElementById('main-content').style.display = 'none';
-                document.getElementById('view-login').classList.add('active');
+            if (!user) {
+                alert('กรุณาเข้าสู่ระบบก่อนใช้งาน Admin Dashboard');
+                window.location.href = 'index.html';
+                return;
             }
-            showLoader(false);
+            try {
+                const tokenResult = await user.getIdTokenResult(true);
+                if (!tokenResult.claims.admin) {
+                    alert('คุณไม่มีสิทธิ์ผู้ดูแลระบบ (Admin Only)');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                document.getElementById('admin-user-info').textContent = user.email + ' (Admin)';
+                loadAdminData();
+            } catch (err) {
+                alert('เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์: ' + err.message);
+                window.location.href = 'index.html';
+            }
         });
 
-        window.handleAdminLogin = async () => {
-            const e = document.getElementById('admin-email').value;
-            const p = document.getElementById('admin-password').value;
-            showLoader(true);
+        async function loadAdminData() {
+            const usersSnap = await getDocs(collection(db, 'users'));
+            const msgsSnap = await getDocs(collection(db, 'messages'));
+            const reportsSnap = await getDocs(collection(db, 'reports'));
+
+            document.getElementById('stat-users').textContent = usersSnap.size;
+            document.getElementById('stat-messages').textContent = msgsSnap.size;
+            document.getElementById('stat-reports').textContent = reportsSnap.size;
+
+            const container = document.getElementById('reports-list');
+            if (reportsSnap.empty) {
+                container.innerHTML = `<p class="text-sm text-slate-500">ไม่มีรายการรายงานในขณะนี้</p>`;
+                return;
+            }
+
+            let html = '';
+            reportsSnap.forEach(docSnap => {
+                const r = docSnap.data();
+                const id = docSnap.id;
+                html += `
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-bold text-rose-400">ประเภท: ${r.targetType} | เหตุผล: ${r.reason}</p>
+                            <p class="text-xs text-slate-400 mt-1">Target ID: ${r.targetId}</p>
+                        </div>
+                        <button onclick="resolveReport('${id}')" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition">จัดการแล้ว</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        window.resolveReport = async function(reportId) {
             try {
-                await signInWithEmailAndPassword(auth, e, p);
-                // Note: The UI will transition via onAuthStateChanged
+                await deleteDoc(doc(db, 'reports', reportId));
+                alert('ลบรายงานเรียบร้อยแล้ว');
+                loadAdminData();
             } catch (err) {
-                alert("Login Failed: " + err.message);
-                showLoader(false);
+                alert('เกิดข้อผิดพลาด: ' + err.message);
             }
         };
-
-        window.handleAdminLogout = () => signOut(auth);
-
-        // --- Data Loading Functions ---
-
-        async function loadOverview() {
-            try {
-                const uSnap = await getDocs(collection(db, "users"));
-                const rSnap = await getDocs(query(collection(db, "reports"), orderBy("createdAt", "desc")));
-                
-                // Firestore read limit approach, in real large-scale we use count()
-                document.getElementById('stat-users').innerText = uSnap.size;
-                document.getElementById('stat-msgs').innerText = "Live"; // Full scan expensive, omitted
-                document.getElementById('stat-reports').innerText = rSnap.docs.filter(d => d.data().status === 'pending').length;
-            } catch(e) { console.error("Load Overview Error", e); }
-        }
-
-        window.loadUsers = async () => {
-            const tbody = document.getElementById('table-users');
-            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>';
-            try {
-                const snap = await getDocs(query(collection(db, "users"), limit(50)));
-                tbody.innerHTML = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    const status = d.accountStatus || 'active';
-                    const date = d.createdAt ? new Date(d.createdAt.toMillis()).toLocaleDateString() : '-';
-                    const statusBadge = status === 'suspended' 
-                        ? `<span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs">ระงับใช้งาน</span>` 
-                        : `<span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs">ปกติ</span>`;
-
-                    tbody.innerHTML += `
-                    <tr>
-                        <td class="p-4 font-medium">@${d.username}</td>
-                        <td class="p-4">${d.displayName}</td>
-                        <td class="p-4">${statusBadge}</td>
-                        <td class="p-4 text-gray-500">${date}</td>
-                        <td class="p-4 text-right space-x-2">
-                            ${status === 'active' 
-                                ? `<button onclick="suspendUser('${doc.id}', 'suspended')" class="text-yellow-600 hover:underline">ระงับ</button>` 
-                                : `<button onclick="suspendUser('${doc.id}', 'active')" class="text-green-600 hover:underline">ปลดระงับ</button>`
-                            }
-                            <button onclick="deleteUser('${doc.id}')" class="text-red-600 hover:underline ml-2">ลบถาวร</button>
-                        </td>
-                    </tr>`;
-                });
-            } catch(e) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-red-500">Error loading users</td></tr>'; }
-        };
-
-        window.loadReports = async () => {
-            const tbody = document.getElementById('table-reports');
-            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>';
-            try {
-                const snap = await getDocs(query(collection(db, "reports"), orderBy("createdAt", "desc"), limit(50)));
-                tbody.innerHTML = '';
-                if(snap.empty) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center">ไม่มีรายงาน</td></tr>'; return; }
-                
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const date = d.createdAt ? new Date(d.createdAt.toMillis()).toLocaleString() : '-';
-                    const statusBadge = d.status === 'pending'
-                        ? `<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">รอดำเนินการ</span>`
-                        : `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">ตรวจสอบแล้ว</span>`;
-
-                    tbody.innerHTML += `
-                    <tr>
-                        <td class="p-4 font-mono text-xs text-blue-500 hover:underline cursor-pointer" onclick="viewMessageDetails('${d.messageId}')">${d.messageId}</td>
-                        <td class="p-4">${d.reason}</td>
-                        <td class="p-4">${statusBadge}</td>
-                        <td class="p-4 text-gray-500">${date}</td>
-                        <td class="p-4 text-right">
-                            ${d.status === 'pending' ? `
-                                <button onclick="resolveReport('${docSnap.id}')" class="text-green-600 hover:underline text-sm">ทำเครื่องหมายตรวจสอบแล้ว</button>
-                                <button onclick="deleteContent('messages', '${d.messageId}', '${docSnap.id}')" class="text-red-600 hover:underline text-sm ml-3">ลบเนื้อหา</button>
-                            ` : `<span class="text-gray-400 text-xs">ไม่มี Action</span>`}
-                        </td>
-                    </tr>`;
-                });
-            } catch(e) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-red-500">Error loading reports</td></tr>'; }
-        };
-
-        window.loadAuditLogs = async () => {
-            const tbody = document.getElementById('table-audit');
-            tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
-            try {
-                const snap = await getDocs(query(collection(db, "adminAuditLogs"), orderBy("timestamp", "desc"), limit(100)));
-                tbody.innerHTML = '';
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const date = d.timestamp ? new Date(d.timestamp.toMillis()).toLocaleString() : '-';
-                    tbody.innerHTML += `
-                    <tr>
-                        <td class="p-4">${d.adminUid}</td>
-                        <td class="p-4 text-blue-600">${d.action}</td>
-                        <td class="p-4">${d.target || d.targetUid}</td>
-                        <td class="p-4 text-gray-500">${date}</td>
-                    </tr>`;
-                });
-            } catch(e) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-500">Error loading logs</td></tr>'; }
-        };
-
-        // --- Admin Actions (Calling Cloud Functions) ---
-
-        window.suspendUser = async (uid, status) => {
-            if(!confirm(`ยืนยันการเปลี่ยนสถานะบัญชีนี้เป็น: ${status} ?`)) return;
-            showLoader(true);
-            try {
-                await callUpdateUserStatus({ uid, status });
-                alert("บันทึกสถานะสำเร็จ");
-                loadUsers();
-            } catch(e) { alert("Error: " + e.message); }
-            showLoader(false);
-        };
-
-        window.deleteUser = async (uid) => {
-            if(!confirm("อันตราย! คุณต้องการลบบัญชีนี้ถาวร ใช่หรือไม่? (ข้อมูลจะถูกลบทั้งหมดและไม่สามารถกู้คืนได้)")) return;
-            showLoader(true);
-            try {
-                await callDeleteAccount({ uid });
-                alert("ลบบัญชีสำเร็จ");
-                loadUsers();
-            } catch(e) { alert("Error: " + e.message); }
-            showLoader(false);
-        };
-
-        window.resolveReport = async (reportId) => {
-            showLoader(true);
-            try {
-                await callModerateContent({ collectionName: "reports", docId: reportId, action: "resolve_report" });
-                loadReports();
-            } catch(e) { alert("Error: " + e.message); }
-            showLoader(false);
-        };
-
-        window.deleteContent = async (collectionName, docId, reportIdToResolve) => {
-            if(!confirm("ยืนยันการลบเนื้อหานี้ออกจากฐานข้อมูลถาวร?")) return;
-            showLoader(true);
-            try {
-                await callModerateContent({ collectionName, docId, action: "delete" });
-                if(reportIdToResolve) {
-                    await callModerateContent({ collectionName: "reports", docId: reportIdToResolve, action: "resolve_report" });
-                }
-                alert("ลบเนื้อหาสำเร็จ");
-                loadReports();
-            } catch(e) { alert("Error: " + e.message); }
-            showLoader(false);
-        };
-
-        window.viewMessageDetails = async (msgId) => {
-            try {
-                const docSnap = await getDoc(doc(db, "messages", msgId));
-                if(docSnap.exists()) {
-                    const data = docSnap.data();
-                    let content = data.content ? data.content : "[ ไม่มีข้อความ ]";
-                    if(data.imageUrl) content += `\n[ มีไฟล์รูปภาพแนบ: ${data.imageUrl} ]`;
-                    if(data.voiceUrl) content += `\n[ มีไฟล์เสียงแนบ: ${data.voiceUrl} ]`;
-                    alert(`ข้อความต้นฉบับ:\n\n"${content}"\n\nเวลาส่ง: ${new Date(data.timestamp.toMillis()).toLocaleString()}`);
-                } else {
-                    alert("ไม่พบข้อความนี้ในระบบ (อาจถูกลบไปแล้ว)");
-                }
-            } catch(e) { alert("Error fetching message details"); }
-        }
-
     </script>
 </body>
 </html>
-"""
-
-with open('/mnt/data/admin.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print("[file-tag: file-generated-admin.html]")
